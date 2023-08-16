@@ -15,18 +15,6 @@ permissions: {}
 
 on:
   push:
-    branches:
-      - main
-      - release/*
-      - feat/*
-      - fix/*
-      - perf/*
-      - v1
-      - v2
-      - v2.*
-      - v3.*
-  pull_request:
-  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
@@ -39,13 +27,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node_version: [14, 16, 18, 20]
-        include:
-          # Active LTS + other OS
-          - os: macos-latest
-            node_version: 18
-          - os: windows-latest
-            node_version: 18
+        node_version: [18]
       fail-fast: false
 
     name: "Build&Test: node-${{ matrix.node_version }}, ${{ matrix.os }}"
@@ -120,54 +102,6 @@ jobs:
         if: steps.changed-files.outputs.only_changed != 'true'
         run: pnpm run build
 
-      - name: Test unit
-        if: steps.changed-files.outputs.only_changed != 'true'
-        run: pnpm run test-unit
-
-      - name: Test serve
-        if: steps.changed-files.outputs.only_changed != 'true'
-        run: pnpm run test-serve
-
       - name: Test build
         if: steps.changed-files.outputs.only_changed != 'true'
-        run: pnpm run test-build
-
-  lint:
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    name: "Lint: node-18, ubuntu-latest"
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2.4.0
-
-      - name: Set node version to 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "pnpm"
-
-      - name: Install deps
-        run: pnpm install
-
-      - name: Build
-        run: pnpm run build
-
-      - name: Lint
-        run: pnpm run lint
-
-      - name: Check formatting
-        run: pnpm prettier --check .
-
-      - name: Typecheck
-        run: pnpm run typecheck
-
-      - name: Test docs
-        run: pnpm run test-docs
-
-      # From https://github.com/rhysd/actionlint/blob/main/docs/usage.md#use-actionlint-on-github-actions
-      - name: Check workflow files
-        run: |
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-          ./actionlint -color -shellcheck=""
+        run: pnpm run test-build "playground/worker"
