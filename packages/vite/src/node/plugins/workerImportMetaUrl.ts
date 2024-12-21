@@ -231,6 +231,10 @@ export function workerImportMetaUrlPlugin(config: ResolvedConfig): Plugin {
           const url = rawUrl.slice(1, -1)
           let file: string | undefined
           if (url[0] === '.') {
+            console.log({
+              id, 
+              url
+            })
             file = path.resolve(path.dirname(id), url)
             console.log({
               file,
@@ -269,7 +273,12 @@ export function workerImportMetaUrlPlugin(config: ResolvedConfig): Plugin {
             if (isBuild) {
               builtUrl = await workerFileToUrl(config, file)
             } else {
-              builtUrl = await fileToUrl(this, cleanUrl(file))
+              const _cleanUrl = cleanUrl(file)
+              builtUrl = await fileToUrl(this, _cleanUrl)
+              console.log({
+                cleanUrl: _cleanUrl,
+                fileToUrl: builtUrl
+              })
               builtUrl = injectQuery(
                 builtUrl,
                 `${WORKER_FILE_ID}&type=${workerType}`,
