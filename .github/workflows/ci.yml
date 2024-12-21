@@ -48,7 +48,7 @@ jobs:
         run: pnpm run build
 
       - name: Test unit
-        run: pnpm run test-unit
+        run: pnpm run test-unit workerImportMetaUrl
 
   test-passed:
     if: (!cancelled() && !failure())

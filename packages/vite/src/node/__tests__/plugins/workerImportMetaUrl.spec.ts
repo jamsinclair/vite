@@ -25,7 +25,7 @@ async function createWorkerImportMetaUrlPluginTransform() {
 describe('workerImportMetaUrlPlugin', async () => {
   const transform = await createWorkerImportMetaUrlPluginTransform()
 
-  test('without worker options', async () => {
+  test.only('without worker options', async () => {
     expect(
       await transform('new Worker(new URL("./worker.js", import.meta.url))'),
     ).toMatchInlineSnapshot(

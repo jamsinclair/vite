@@ -232,7 +232,15 @@ export function workerImportMetaUrlPlugin(config: ResolvedConfig): Plugin {
           let file: string | undefined
           if (url[0] === '.') {
             file = path.resolve(path.dirname(id), url)
+            console.log({
+              file,
+              stage: 'after path.resolve'
+            })
             file = tryFsResolve(file, fsResolveOptions) ?? file
+            console.log({
+              file,
+              stage: 'after tryFsResolve'
+            })
           } else {
             workerResolver ??= createBackCompatIdResolver(config, {
               extensions: [],
@@ -240,6 +248,10 @@ export function workerImportMetaUrlPlugin(config: ResolvedConfig): Plugin {
               preferRelative: true,
             })
             file = await workerResolver(this.environment, url, id)
+            console.log({
+              file,
+              stage: 'after workerResolver'
+            })
             file ??=
               url[0] === '/'
                 ? slash(path.join(config.publicDir, url))
