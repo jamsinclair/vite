@@ -291,6 +291,9 @@ export async function fileToDevUrl(
   }
 
   let rtn: string
+  console.log('config root evaluated in asset.ts', {
+    configRoot: config.root
+  })
   if (publicFile) {
     // in public dir during dev, keep the url as-is
     rtn = id
