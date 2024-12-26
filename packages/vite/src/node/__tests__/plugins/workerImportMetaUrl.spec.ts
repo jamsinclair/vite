@@ -8,11 +8,7 @@ import { PartialEnvironment } from '../../baseEnvironment'
 async function createWorkerImportMetaUrlPluginTransform() {
   const root = path.posix.join(import.meta.dirname, 'fixtures/worker')
   console.log({ root })
-  const config = await resolveConfig({ configFile: false }, 'serve')
-
-  console.log({
-    configRoot: config.root
-  })
+  const config = await resolveConfig({ configFile: false, root }, 'serve')
   const instance = workerImportMetaUrlPlugin(config)
   const environment = new PartialEnvironment('client', config)
 
