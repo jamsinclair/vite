@@ -240,7 +240,7 @@ export function workerImportMetaUrlPlugin(config: ResolvedConfig): Plugin {
               file,
               stage: 'after path.resolve'
             })
-            file = tryFsResolve(file, fsResolveOptions) ?? file
+            file = slash(tryFsResolve(file, fsResolveOptions) ?? file)
             console.log({
               file,
               stage: 'after tryFsResolve'
