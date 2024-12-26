@@ -6,8 +6,7 @@ import { resolveConfig } from '../../config'
 import { PartialEnvironment } from '../../baseEnvironment'
 
 async function createWorkerImportMetaUrlPluginTransform() {
-  const root = path.posix.join(import.meta.dirname, 'fixtures/worker')
-  console.log({ root })
+  const root = path.join(import.meta.dirname, 'fixtures/worker')
   const config = await resolveConfig({ configFile: false, root }, 'serve')
   const instance = workerImportMetaUrlPlugin(config)
   const environment = new PartialEnvironment('client', config)
@@ -17,7 +16,7 @@ async function createWorkerImportMetaUrlPluginTransform() {
     const result = await instance.transform.call(
       { environment, parse: parseAst },
       code,
-      path.posix.join(root, 'foo.ts'),
+      path.join(root, 'foo.ts'),
     )
     return result?.code || result
   }
@@ -26,7 +25,7 @@ async function createWorkerImportMetaUrlPluginTransform() {
 describe('workerImportMetaUrlPlugin', async () => {
   const transform = await createWorkerImportMetaUrlPluginTransform()
 
-  test.only('without worker options', async () => {
+  test('without worker options', async () => {
     expect(
       await transform('new Worker(new URL("./worker.js", import.meta.url))'),
     ).toMatchInlineSnapshot(

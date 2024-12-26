@@ -231,20 +231,8 @@ export function workerImportMetaUrlPlugin(config: ResolvedConfig): Plugin {
           const url = rawUrl.slice(1, -1)
           let file: string | undefined
           if (url[0] === '.') {
-            console.log({
-              id, 
-              url
-            })
             file = path.resolve(path.dirname(id), url)
-            console.log({
-              file,
-              stage: 'after path.resolve'
-            })
             file = slash(tryFsResolve(file, fsResolveOptions) ?? file)
-            console.log({
-              file,
-              stage: 'after tryFsResolve'
-            })
           } else {
             workerResolver ??= createBackCompatIdResolver(config, {
               extensions: [],
@@ -252,10 +240,6 @@ export function workerImportMetaUrlPlugin(config: ResolvedConfig): Plugin {
               preferRelative: true,
             })
             file = await workerResolver(this.environment, url, id)
-            console.log({
-              file,
-              stage: 'after workerResolver'
-            })
             file ??=
               url[0] === '/'
                 ? slash(path.join(config.publicDir, url))
@@ -273,12 +257,7 @@ export function workerImportMetaUrlPlugin(config: ResolvedConfig): Plugin {
             if (isBuild) {
               builtUrl = await workerFileToUrl(config, file)
             } else {
-              const _cleanUrl = cleanUrl(file)
-              builtUrl = await fileToUrl(this, _cleanUrl)
-              console.log({
-                cleanUrl: _cleanUrl,
-                fileToUrl: builtUrl
-              })
+              builtUrl = await fileToUrl(this, cleanUrl(file))
               builtUrl = injectQuery(
                 builtUrl,
                 `${WORKER_FILE_ID}&type=${workerType}`,
